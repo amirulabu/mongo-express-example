@@ -1,0 +1,45 @@
+version: "3.3"
+
+services:
+  mongo:
+    image: mongo:xenial
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+    ports:
+      - 27017:27017
+    volumes:
+      - ./data/db:/data/db
+    container_name: mongo
+
+  mongo-express-example:
+    build:
+      context: ./
+    restart: always
+    environment:
+      - EXPRESS_DOMAIN=localhost
+      - MONGO_URL=mongodb://root:example@mongo:27017/?ssl=false
+    ports:
+      - 3000:3000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mongoexpressrouter.rule=Host(`localhost`)"
+      - "traefik.http.routers.mongoexpressrouter.entrypoints=web"
+    container_name: mongo-express-example
+
+  traefik:
+    image: traefik:v2.1
+    restart: always
+    command:
+      - "--log.level=DEBUG"
+      - "--api.dashboard=true"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - 80:80
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    container_name: traefik
