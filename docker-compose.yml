@@ -9,8 +9,6 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=example
     ports:
       - 27017:27017
-    volumes:
-      - ./data/db:/data/db
     container_name: mongo
 
   mongo-express-example:
