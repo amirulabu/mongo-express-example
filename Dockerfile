@@ -12,4 +12,5 @@ EXPOSE 3000
 
 ENV EXPRESS_IP=0.0.0.0
 
-CMD [ "npm", "start" ]
+# npm start manually in docker-compose
+# CMD [ "npm", "start" ]

@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.7"
 
 services:
   mongo:
@@ -24,8 +24,9 @@ services:
       - 3000:3000
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.mongoexpressrouter.rule=Host(`localhost`)"
+      - "traefik.http.routers.mongoexpressrouter.rule=Host(`${EXPRESS_DOMAIN}`)"
       - "traefik.http.routers.mongoexpressrouter.entrypoints=web"
+    command: ["./scripts/wait-for.sh", "mongo:27017", "--", "npm", "start"]
     container_name: mongo-express-example
 
   traefik:
